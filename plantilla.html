@@ -16,11 +16,151 @@
 
     <script type="text/babel">
     
-    function Saludo() {
-        return <p>Hola</p>;
-    }
+        class Padre extends React.Component {
+            state = {
+                name: null,
+            };
 
-    ReactDOM.render(<Saludo />, document.getElementById("root"));
+            
+            setName() {
+                const input = document.getElementById('playerName');
+                const myname = input.value;
+                this.setState({name: myname})
+            }
+
+            render() {
+
+                if (this.state.name === null) {
+                    return (
+                        <div>
+                        <p>Introduce tu nombre</p>
+                        <input id="playerName" type="text" placeholder="Tu nombre aquí"/>
+                        <button onClick={()=> this.setName()}>Jugar</button>
+                        </div>
+                    )
+                }
+
+                return(<Hijo name={this.state.name}/>);
+            }
+        }
+
+        class Hijo extends React.Component {
+            
+            constructor(props) {
+                super(props);
+                this.state = {
+                    start: false,
+                    end: false,
+                    time: 5,
+                    lastTime: 0,
+                    counter: null,
+                    inTime: null,
+                    clickCounter: 0,
+                    goalClicks: 20
+                };
+            }
+
+            render() {
+                let mode;
+
+
+                if(!this.state.start) {
+                    mode = 'new';
+                    return (
+                        <React.Fragment>
+                            <p>Comienza cuando quieras {this.props.name}</p>
+                            <p>Tienes {this.state.time} segundos para conseguir hacer {this.state.goalClicks} clicks al botón y ganar la primera prueba</p>
+                            <p>¿Listo?</p>
+                            <button onClick={()=> this.startGame(mode)}>Jugar!</button>
+                        </React.Fragment>
+                    );
+                };
+
+                if (this.state.clickCounter >= this.state.goalClicks) {
+                    let timeGoal = this.state.counter - this.state.time;
+                    mode = 'nextLevel';
+                    return (
+                        <React.Fragment>
+                            <p>Perfecto ganaste! Lo conseguiste en {timeGoal} segundos!</p>
+                            <p>Serías capaz de conseguirlo en menos tiempo?</p>
+                            <button onClick={()=> this.startGame(mode)}>Jugar!</button>
+                        </React.Fragment>
+                    )
+                };
+
+                if (this.state.end) {
+                    mode = 'retry';
+                    return (
+                        <React.Fragment>
+                            <p>Perdiste! has hecho {this.state.clickCounter} clicks, pero no llegaste al objetivo</p>
+                            <button onClick={()=> this.startGame(mode)}>Reintentar</button>
+                        </React.Fragment>
+                    )
+                };
+
+                return (
+                    <React.Fragment>
+                        <p>A jugar!</p>
+                        <p>Contador: {this.state.counter}</p>
+                        <p>Clicks hechos: {this.state.clickCounter} / {this.state.goalClicks}</p>
+                        <button onClick={()=> this.setClick()}>Púlsame, deprisa!!</button>
+                    </React.Fragment>
+                );
+            }
+
+            startGame(mode) {
+                
+                let theTime;
+                
+                if(mode === 'retry' || mode === 'new') {
+                    theTime = this.state.time;
+                }
+                
+                if(mode === 'nextLevel') {
+                    theTime = this.state.lastTime;
+                    theTime--;
+                }
+                
+                
+                this.setState({
+                    start: true, 
+                    end: false, 
+                    clickCounter: 0,
+                    counter: theTime,
+                    lastTime: theTime
+                })
+
+                let tiepoeoeo = this.state.lastTime;
+                
+                let contador = this.state.counter;
+                console.log(tiepoeoeo, theTime);
+
+                let timeout = setInterval(() => {
+                    contador--;
+                    this.setState({counter: contador});
+                    if(contador == 0 || this.state.clickCounter >= this.state.goalClicks) {
+                        clearInterval(timeout);
+                        this.setState({
+                            end: true, 
+                            counter: lastTime
+                        })
+                    }
+                }, 1000);
+
+            }
+
+            setClick() {
+                let lastClick = this.state.clickCounter;
+                lastClick++;
+                this.setState({clickCounter: lastClick});
+            }
+            
+        }
+
+        ReactDOM.render(
+            <Padre />,
+            document.getElementById('root')
+        );
 
     </script>
 </body>

@@ -1,29 +1,37 @@
 class Padre extends React.Component {
   state = {
-    valor: 7,
-    sonValue: null,
+    valueMax: 20,
+    value: null,
   };
 
   cambio(value) {
-    console.log("cambio", this.state)
-    this.setState({sonValue: value});
+    console.log("Nuevo click", this.state)
+    this.setState({value: value});
   }
   
   render() {
-    if (this.state.sonValue > this.state.valor) {
+    if (this.state.value > this.state.valueMax) {
         return (<p>Adiós hijo :( te has emancipado)</p>);
     }
     
-    return(<Hijo valor={this.state.valor} onChangeNumber={valor => this.cambio(valor)} />);
+    return(<Hijo valor={this.state.valor} onsetClick={valor => this.cambio(valor)} />);
   }
 }
 
+
+
+
+
+
+class Hijo extends React.Component {
+  
+}
 class Hijo extends React.Component {
   constructor(props) {
      super(props);
     
     this.state = {
-      luckyNumber: props.valor
+      doneClick: null
     };
     
     console.log("--> Construyo");
@@ -35,12 +43,13 @@ class Hijo extends React.Component {
     return (
       <React.Fragment>
         <p>Hola</p>
-        <p>Este es mi número de la suerte: {this.state.luckyNumber} El de mi padre es: {this.props.valor}</p>
-        <button onClick={() => this.changeNumber()}>Cambia número</button>
+        <p>Rápido pulsa el botón para conseguir llegar a la meta!</p> 
+        <p>Clicks hechos: {this.props.valor}</p>
+        <button onClick={() => this.setClick()}>Púlsame, deprisa!!</button>
       </React.Fragment>      
     );
   }
-  
+/*   
   componentDidMount() {
     console.log("--> Fin montaje")
   }
@@ -51,15 +60,18 @@ class Hijo extends React.Component {
   
   componentWillUnmount() {
     console.log("--> Adiós mundo!");
-  }
+  } */
   
   
-  changeNumber() {
-    const newNumber = Math.round(Math.random() * 10);
+  setClick(e) {
     
-    this.setState({luckyNumber: newNumber});
+    const lastClick = this.state.valor;
+
+    let newClick = lastClick++;
     
-    this.props.onChangeNumber(newNumber);
+    this.setState({doneClick: newClick});
+    
+    this.props.onsetClick(newClick);
   }
 }
 
