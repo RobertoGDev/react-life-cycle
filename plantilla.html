@@ -51,12 +51,11 @@
                 this.state = {
                     start: false,
                     end: false,
-                    time: 5,
-                    lastTime: 0,
+                    time: 30,
+                    lastTime: null,
                     counter: null,
-                    inTime: null,
                     clickCounter: 0,
-                    goalClicks: 20
+                    goalClicks: 10
                 };
             }
 
@@ -65,19 +64,18 @@
 
 
                 if(!this.state.start) {
-                    mode = 'new';
                     return (
                         <React.Fragment>
                             <p>Comienza cuando quieras {this.props.name}</p>
                             <p>Tienes {this.state.time} segundos para conseguir hacer {this.state.goalClicks} clicks al botón y ganar la primera prueba</p>
                             <p>¿Listo?</p>
-                            <button onClick={()=> this.startGame(mode)}>Jugar!</button>
+                            <button onClick={()=> this.startGame()}>Jugar!</button>
                         </React.Fragment>
                     );
                 };
 
                 if (this.state.clickCounter >= this.state.goalClicks) {
-                    let timeGoal = this.state.counter - this.state.time;
+                    let timeGoal = this.state.time - this.state.counter;
                     mode = 'nextLevel';
                     return (
                         <React.Fragment>
@@ -89,11 +87,10 @@
                 };
 
                 if (this.state.end) {
-                    mode = 'retry';
                     return (
                         <React.Fragment>
                             <p>Perdiste! has hecho {this.state.clickCounter} clicks, pero no llegaste al objetivo</p>
-                            <button onClick={()=> this.startGame(mode)}>Reintentar</button>
+                            <button onClick={()=> this.startGame()}>Reintentar</button>
                         </React.Fragment>
                     )
                 };
@@ -110,39 +107,31 @@
 
             startGame(mode) {
                 
-                let theTime;
-                
-                if(mode === 'retry' || mode === 'new') {
-                    theTime = this.state.time;
-                }
+                let gameTime = this.state.time;
+                let contador;
+                    
                 
                 if(mode === 'nextLevel') {
-                    theTime = this.state.lastTime;
-                    theTime--;
+                    gameTime--;
                 }
-                
                 
                 this.setState({
                     start: true, 
                     end: false, 
                     clickCounter: 0,
-                    counter: theTime,
-                    lastTime: theTime
+                    counter: gameTime,
+                    lastTime: gameTime
                 })
-
-                let tiepoeoeo = this.state.lastTime;
                 
-                let contador = this.state.counter;
-                console.log(tiepoeoeo, theTime);
 
                 let timeout = setInterval(() => {
+                    contador = this.state.counter;
                     contador--;
                     this.setState({counter: contador});
-                    if(contador == 0 || this.state.clickCounter >= this.state.goalClicks) {
+                    if(this.state.counter == 0 || this.state.clickCounter >= this.state.goalClicks) {
                         clearInterval(timeout);
                         this.setState({
-                            end: true, 
-                            counter: lastTime
+                            end: true
                         })
                     }
                 }, 1000);
