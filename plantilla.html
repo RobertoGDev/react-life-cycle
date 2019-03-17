@@ -62,7 +62,6 @@
             render() {
                 let mode;
 
-
                 if(!this.state.start) {
                     return (
                         <React.Fragment>
@@ -79,7 +78,7 @@
                     mode = 'nextLevel';
                     return (
                         <React.Fragment>
-                            <p>Perfecto ganaste! Lo conseguiste en {timeGoal} segundos!</p>
+                            <p>Perfecto {this.props.name} ganaste! Lo conseguiste en {timeGoal} segundos!</p>
                             <p>Serías capaz de conseguirlo en menos tiempo?</p>
                             <button onClick={()=> this.startGame(mode)}>Jugar!</button>
                         </React.Fragment>
@@ -89,7 +88,7 @@
                 if (this.state.end) {
                     return (
                         <React.Fragment>
-                            <p>Perdiste! has hecho {this.state.clickCounter} clicks, pero no llegaste al objetivo</p>
+                            <p>Perdiste {this.props.name}! has hecho {this.state.clickCounter} clicks, pero no llegaste al objetivo</p>
                             <button onClick={()=> this.startGame()}>Reintentar</button>
                         </React.Fragment>
                     )
@@ -112,9 +111,10 @@
                     
                 
                 if(mode === 'nextLevel') {
-                    gameTime--;
+                    gameTime = gameTime - (this.state.time / 10);
                 }
                 
+                console.log(gameTime);
                 this.setState({
                     start: true, 
                     end: false, 
