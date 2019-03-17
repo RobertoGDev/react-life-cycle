@@ -78,7 +78,7 @@
                     mode = 'nextLevel';
                     return (
                         <React.Fragment>
-                            <p>Perfecto {this.props.name} ganaste! Lo conseguiste en {timeGoal} segundos!</p>
+                            <p>Perfecto {this.props.name}, ganaste! Lo conseguiste en {timeGoal} segundos!</p>
                             <p>Serías capaz de conseguirlo en menos tiempo?</p>
                             <button onClick={()=> this.startGame(mode)}>Jugar!</button>
                         </React.Fragment>
@@ -89,7 +89,7 @@
                     return (
                         <React.Fragment>
                             <p>Perdiste {this.props.name}! has hecho {this.state.clickCounter} clicks, pero no llegaste al objetivo</p>
-                            <button onClick={()=> this.startGame()}>Reintentar</button>
+                            <button className={"retardShow"} onClick={()=> this.startGame()}>Reintentar</button>
                         </React.Fragment>
                     )
                 };
@@ -99,7 +99,7 @@
                         <p>A jugar!</p>
                         <p>Contador: {this.state.counter}</p>
                         <p>Clicks hechos: {this.state.clickCounter} / {this.state.goalClicks}</p>
-                        <button onClick={()=> this.setClick()}>Púlsame, deprisa!!</button>
+                        <button className={"retardShow"} onClick={()=> this.setClick()}>Púlsame, deprisa!!</button>
                     </React.Fragment>
                 );
             }
@@ -111,7 +111,10 @@
                     
                 
                 if(mode === 'nextLevel') {
-                    gameTime = gameTime - (this.state.time / 10);
+                    gameTime = this.state.lastTime - Math.round(this.state.lastTime / 10);
+                    if(gameTime < 10) {
+                        gameTime = 10;
+                    }
                 }
                 
                 console.log(gameTime);
