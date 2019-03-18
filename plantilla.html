@@ -74,7 +74,7 @@
                 };
 
                 if (this.state.clickCounter >= this.state.goalClicks) {
-                    let timeGoal = this.state.time - this.state.counter;
+                    let timeGoal = this.state.lastTime - this.state.counter;
                     mode = 'nextLevel';
                     return (
                         <React.Fragment>
